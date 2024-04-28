@@ -11,7 +11,7 @@ local tools = require( "tools" )
 local function parsing(params, data, func)
   -- assert(type(func) == 'function', 'request function, but find ' .. type(func))
   tools.assert(func, 'function', 'request function')
-  if tools.debug then 
+  if tools.DEBUG then 
     tools.dump(params, 'Parsing Params') 
     tools.dump(data, 'Domain Data') 
   end

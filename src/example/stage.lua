@@ -20,7 +20,7 @@ end
 
 -- hero的信息显示
 local function display_simple(hero)
-  return string.format('[%s%d号位的%s(%d)]', mode.CAMP[hero.camp], hero.pos, hero.name, hero.id)
+  return string.format('[%s%d号位的%s(%d)]', mode.CAMP_INFO[hero.camp], hero.pos, hero.name, hero.id)
 end
 
 local function display_hero(hero)
@@ -83,7 +83,7 @@ end
 
 function Stage:get_player(camp)
   -- 根据规则获取self/oppo
-  if camp == mode.PLAYER['self'] then
+  if camp == mode.CAMP_SELF then
     return self.self_player
   else
     return self.oppo_player
@@ -117,7 +117,7 @@ end
 
 function Stage:init_members(members)
   iterator(members, function(member) 
-    if mode.is_hero(member.type) then
+    if member.type == mode.MEMBER_TYPE_HERO then
       self:init_hero(member)
     end
     -- ...
@@ -126,9 +126,9 @@ end
 
 --------- ↓↓↓ display ↓↓↓ ---------
 function Stage:display_player_info()
-  for i = 1, #mode.CAMP do
+  for i = 1, #mode.CAMP_INFO do
     local player = self:get_player(i)
-    self.record:buffer(mode.CAMP[i] .. '[' .. player.name .. ']信息:')
+    self.record:buffer(mode.CAMP_INFO[i] .. '[' .. player.name .. ']信息:')
     local heroes = player.heroes
     for j = 1, #heroes do
       self.record:buffer(display_hero(heroes[j]))
@@ -153,9 +153,9 @@ function Stage:display_damage_types(infos)
   if not tools.is_empty(infos) then
     iterator(infos, function(info)
       if info.value ~= 0 then
-        table.insert(str, string.format('%s[%d]', mode.DAMAGE_TYPES[info.type], info.value))
+        table.insert(str, string.format('%s[%d]', mode.DAMAGE_TYPE_INFO[info.type], info.value))
       else
-        table.insert(str, string.format('%s', mode.DAMAGE_TYPES[info.type]))
+        table.insert(str, string.format('%s', mode.DAMAGE_TYPE_INFO[info.type]))
       end
     end)
   else
@@ -178,7 +178,7 @@ function Stage:display_stage_info()
   self.record:buffer('玩家信息: ' .. self.self_player.name)
   self.record:buffer('对手信息: ' .. self.oppo_player.name)
   self.record:buffer('--------------')
-  self.record:buffer('模式: ' .. mode.BATTLE_TYPES[self.type])
+  self.record:buffer('模式: ' .. mode.BATTLE_TYPE_INFO[self.type])
   self.record:buffer('胜负: ' .. mode.winner(self.is_win))
   self.record:buffer('')
 end
@@ -254,7 +254,7 @@ function Stage:process_aactions(actions)
       local type = action.type
       -- => 谁行动, 行动原因是什么[普通/特殊...], 使用什么技能[=>技能名称(skill_id)]
       -- 如果改html, 可以嵌入技能引用信息, 做tooltips
-      self.record:buffer('由%s%s, 使用skill:%d', actor_info, mode.ACTION_TYPES[type], skill)
+      self.record:buffer('由%s%s, 使用skill:%d', actor_info, mode.ACTION_TYPE_INFO[type], skill)
       -- 行动时
       self:process_damage_infos(action.action_infos, '行动')
       -- 在行动期间
@@ -339,19 +339,19 @@ function Stage:process_damage_infos(infos, remark)
     iterator(infos, function(info)
       -- 目标信息
       local hero = self:get_hero(info.target)
-      local op = info.op -- 加还是扣
+      local op = info.op
       local id = info.id
-      local attr = mode.ATTRS[id]
+      local attr = mode.ATTR_INFO[id]
       local value = info.value
 			local actual_value = info.actual_value
-      if attr == 'energy' then
+      if id == mode.ATTR_ENERGY then
         if op == 1 then
           modify_attr(hero, 'energy', actual_value)
         elseif op == 2 then
           modify_attr(hero, 'energy', -actual_value)
         end
-        self.record:buffer('->给%s[%s:energy][%d|%d(->%d)]', display_simple(hero), mode.DAMAGE_OP[op], value, actual_value, hero.energy)
-      elseif attr == 'hp' then
+        self.record:buffer('->给%s[%s:energy][%d|%d(->%d)]', display_simple(hero), mode.DAMAGE_OP_INFO[op], value, actual_value, hero.energy)
+      elseif id == mode.ATTR_HP then
         -- 当存在特殊的血量规则时, 需要额外处理
         if op == 1 then
           modify_attr(hero, 'hp', actual_value)
@@ -360,7 +360,7 @@ function Stage:process_damage_infos(infos, remark)
         end
         -- 生成伤害类型信息
         local damage_types = self:display_damage_types(info.damage_types)
-        self.record:buffer('->给%s%s, [%s:hp][%d|%d(->%d)]', display_simple(hero), damage_types, mode.DAMAGE_OP[op], value, actual_value, hero.hp, damage_types)
+        self.record:buffer('->给%s%s, [%s:hp][%d|%d(->%d)]', display_simple(hero), damage_types, mode.DAMAGE_OP_INFO[op], value, actual_value, hero.hp, damage_types)
       else
       end
     end)

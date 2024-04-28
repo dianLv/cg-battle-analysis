@@ -3,61 +3,55 @@
 -- 
 local Mode = {}
 
--- 属性解释
+-- 阵营相关
+Mode.CAMP_SELF = 1
+Mode.Camp_OPPO = 2
 
--- 如 CAMP
--- 如 Damage_TYPES
--- act_type
-Mode.CAMP = {
-  [1] = "玩家",
-  [2] = "对手"
+Mode.CAMP_INFO = {
+  [Mode.CAMP_SELF] = "玩家",
+  [Mode.Camp_OPPO] = "对手"
 }
 
-Mode.PLAYER = {
-  ["self"] = 1,
-  ["oppo"] = 2
-}
-
-Mode.ACTION_TYPES = {
+Mode.ACTION_TYPE_INFO = {
   [0] = "行动",
   [1] = "额外行动",
   [2] = "特殊行动"
 }
 
-Mode.DAMAGE_TYPES = {
+Mode.DAMAGE_TYPE_INFO = {
   [0] = "", -- 一般
   [1] = "暴击",
   [2] = "闪避",
   [3] = "减伤"
 }
 
-Mode.DAMAGE_OP = {
-  [1] = "增加",
-  [2] = "减少"
+-- (damage/buff)op相关
+Mode.OP_PLUS = 1
+Mode.OP_MINUS = 2
+
+Mode.DAMAGE_OP_INFO = {
+  [Mode.OP_PLUS] = "增加",
+  [Mode.OP_MINUS] = "减少"
 }
 
--- Mode.BUFF_OP = {
---   [1] = "添加",
---   [2] = "移除"
--- }
+Mode.BUFF_OP_INFO = {
+  [Mode.OP_PLUS] = "添加",
+  [Mode.OP_MINUS] = "移除"
+}
 
--- Mode.OP = {
---   ['add'] = 1,
---   ['remove'] = 2,
---   ['set'] = 3
--- }
+Mode.ATTR_HP = 1
+Mode.ATTR_HP_MAX = 2
+Mode.ATTR_ENERGY = 3
 
 -- 属性映射
-Mode.ATTRS = {
-  [1] = 'hp',
-  [2] = 'hp_max',
-  [3] = 'energy'
+Mode.ATTR_INFO = {
+  [Mode.ATTR_HP] = 'hp',
+  [Mode.ATTR_HP_MAX] = 'hp_max',
+  [Mode.ATTR_ENERGY] = 'energy'
 }
 
-Mode.MEMBER_TYPES = {
-  [1] = 'hero',
-  -- ...
-}
+Mode.MEMBER_TYPE_HERO = 1
+-- ...
 
 -- FAKE_NAME
 Mode.HERO_NAMES = {
@@ -69,17 +63,13 @@ Mode.HERO_NAMES = {
   [1005] = '海盗'
 }
 
-Mode.BATTLE_TYPES = {
+Mode.BATTLE_TYPE_INFO = {
   [1] = 'PVE',
   [2] = 'PVP',
   -- ...
 }
 
 -- 函数类
-function Mode.is_hero(id)
-  local type = Mode.MEMBER_TYPES[id]
-  return type == 'hero'
-end
 
 function Mode.winner(is_win)
   if is_win then
@@ -94,6 +84,7 @@ function Mode.help_text()
 
   table.insert(str, '*Hero血量表示[血量/最大血量]')
   table.insert(str, '*Hero属性变化[增加/扣除:属性][表现值|实际值(->当前值)]')
+  -- hp table.insert(str, '*Hero属性变化[增加/扣除:hp][表现值|实际值(->(hp/max_hp)%)]')
 
   return table.concat(str, '\n')
 end

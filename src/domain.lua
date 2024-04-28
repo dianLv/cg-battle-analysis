@@ -63,8 +63,8 @@ Domain.BattleDamageInfo = {
   actual_value = 0, -- 实际数值, 改变属性的数值
   damage_types = {}, -- @BattleDamageType 
   effect, -- 效果表现
-  -- 目标的状态变化
-  -- alive = false,
+  -- 目标的状态变化, 受击过程中目标状态的变化
+  -- alive = false
 }
 
 -- DamageType, 暴击, 闪避, 减伤 ...

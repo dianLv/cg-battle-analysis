@@ -1,4 +1,4 @@
-local output_name = arg[1] or 'example_battle_report.txt'
+local output_name = arg[1] or './example/example_battle_report.txt'
 local tools = require('tools')
 
 local record = require('record')

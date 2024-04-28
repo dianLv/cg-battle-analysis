@@ -4,8 +4,9 @@
 
 local Tools = {}
 -- debuf flag
-Tools.debug = false
--- Tools.version = 'v.5.0'
+Tools.DEBUG = false
+-- Tools.VERSION = '0.0.5'
+
 function Tools.assert(val, default_type, msg)
     assert(type(val) == default_type, msg .. ', but find ' .. type(val))
 end
