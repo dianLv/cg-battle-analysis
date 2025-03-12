@@ -38,6 +38,5 @@ build/
 .DS_Store
 
 ### Local Lua ###
-/src/run_main.bat
-/src/lua53.exe
-/src/lua53.dll
+src/example/lua53.exe
+src/example/lua53.dll

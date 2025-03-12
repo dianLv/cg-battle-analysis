@@ -1,5 +1,5 @@
 local tools = require('tools')
-local data_tables = require('data_tables')
+local data_tables = require('example.data_tables')
 local mode = require('example.mode')
 
 -- BattlePlayer prototype --
